@@ -1,6 +1,15 @@
+ using LocalChatServerWeb.Data;
+ using LocalChatServerWeb.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
+ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+     .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
+     (
+         mongoDbSettings.ConnectionString, mongoDbSettings.Name
+     );
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -17,7 +26,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
