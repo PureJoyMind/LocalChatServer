@@ -1,0 +1,98 @@
+<mxfile host="Electron" modified="2024-01-13T15:39:22.492Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.18 Chrome/120.0.6099.199 Electron/28.1.2 Safari/537.36" etag="cs9Ztf2oL5JyMheyTiM9" version="22.1.18" type="device">
+  <diagram name="Page-1" id="e7e014a7-5840-1c2e-5031-d8a46d1fe8dd">
+    <mxGraphModel dx="1430" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="800" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Client" style="swimlane;whiteSpace=wrap" parent="1" vertex="1">
+          <mxGeometry x="159" y="128" width="244.5" height="512" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="" style="ellipse;shape=startState;fillColor=#000000;strokeColor=#ff0000;" parent="2" vertex="1">
+          <mxGeometry x="107.25" y="40" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#FF0000;endFill=1;rounded=0" parent="2" source="5" target="7" edge="1">
+          <mxGeometry x="100" y="40" as="geometry">
+            <mxPoint x="122.25" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7" value="Send Create &#xa;Session Request" style="" parent="2" vertex="1">
+          <mxGeometry x="67.25" y="110" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="rzPC1PLDTXvjh89ew3LO-21" value="Store Session Token&#xa;in Cache" style="" parent="2" vertex="1">
+          <mxGeometry x="47.25" y="332" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="rzPC1PLDTXvjh89ew3LO-20" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="2" source="cnsi8od-A8sbog_Lnmo3-28" target="rzPC1PLDTXvjh89ew3LO-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="122.75" y="372" as="targetPoint" />
+            <mxPoint x="122.25" y="310" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rzPC1PLDTXvjh89ew3LO-22" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="2" source="rzPC1PLDTXvjh89ew3LO-21" target="rzPC1PLDTXvjh89ew3LO-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="122" y="452" as="targetPoint" />
+            <mxPoint x="132" y="320" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rzPC1PLDTXvjh89ew3LO-23" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="2" vertex="1">
+          <mxGeometry x="107.25" y="432" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-28" value="Decrypt Token with&#xa;private key" style="" vertex="1" parent="2">
+          <mxGeometry x="67.25" y="231" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Server" style="swimlane;whiteSpace=wrap;startSize=23;" parent="1" vertex="1">
+          <mxGeometry x="403.5" y="128" width="265.5" height="512" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="Create Symmetric&#xa;Token for Session" style="" parent="3" vertex="1">
+          <mxGeometry x="77.75" y="162" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="3" source="16" target="cnsi8od-A8sbog_Lnmo3-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="132.75" y="328.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqWyClZTz7HQwE1gYkCU-51" value="Send Symmetric Token&#xa;To all users" style="" parent="3" vertex="1">
+          <mxGeometry x="62.75" y="372" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="Create Session" style="" parent="3" vertex="1">
+          <mxGeometry x="77.75" y="60" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="3" source="8" target="16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-20" value="Encrypt Session token" style="" vertex="1" parent="3">
+          <mxGeometry x="62.75" y="262" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-21" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="3" source="cnsi8od-A8sbog_Lnmo3-20" target="mqWyClZTz7HQwE1gYkCU-51">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="143" y="272" as="targetPoint" />
+            <mxPoint x="143" y="222" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqWyClZTz7HQwE1gYkCU-41" value="Activity Diagram for Session Creation" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=18;" parent="1" vertex="1">
+          <mxGeometry x="159" y="80" width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="endArrow=open;strokeColor=#FF0000;endFill=1;rounded=0" parent="1" source="7" target="8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-22" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;for each user, &lt;br style=&quot;font-size: 10px;&quot;&gt;encrypt based on their own public token.&lt;/font&gt;" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=20;verticalAlign=middle;align=left;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="320" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-27" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=0.683;exitY=-0.043;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cnsi8od-A8sbog_Lnmo3-20" target="cnsi8od-A8sbog_Lnmo3-22">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="440" as="sourcePoint" />
+            <mxPoint x="520" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cnsi8od-A8sbog_Lnmo3-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#FF3333;strokeColor=#FF3333;entryX=0.992;entryY=0.608;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="mqWyClZTz7HQwE1gYkCU-51" target="cnsi8od-A8sbog_Lnmo3-28">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="390" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="420" y="525" />
+              <mxPoint x="420" y="389" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
