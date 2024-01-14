@@ -20,19 +20,19 @@ namespace LocalChatServerWeb.Services
                 "Sessions");
         }
 
-        public async Task<List<Session>> GetSessionsAsync() =>
+        public async Task<List<Session>> GetAsync() =>
             await sessionsCollection.Find(_ => true).ToListAsync();
 
-        public async Task<Session?> GetSessionAsync(string id) =>
+        public async Task<Session?> GetAsync(string id) =>
             await sessionsCollection.Find(x => x.Id == new Guid(id)).FirstOrDefaultAsync();
 
-        public async Task CreateSessionAsync(Session newBook) =>
+        public async Task CreateAsync(Session newBook) =>
             await sessionsCollection.InsertOneAsync(newBook);
 
-        public async Task UpdateSessionAsync(string id, Session updatedBook) =>
+        public async Task UpdateAsync(string id, Session updatedBook) =>
             await sessionsCollection.ReplaceOneAsync(x => x.Id == new Guid(id), updatedBook);
 
-        public async Task RemoveSessionAsync(string id) =>
+        public async Task RemoveAsync(string id) =>
             await sessionsCollection.DeleteOneAsync(x => x.Id == new Guid(id));
     }
 }
