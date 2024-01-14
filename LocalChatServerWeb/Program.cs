@@ -1,7 +1,8 @@
  using LocalChatServerWeb.Data;
  using LocalChatServerWeb.Models;
+ using LocalChatServerWeb.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
@@ -10,6 +11,7 @@ var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Ge
      (
          mongoDbSettings.ConnectionString, mongoDbSettings.Name
      );
+builder.Services.AddSingleton<SessionRepository>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
