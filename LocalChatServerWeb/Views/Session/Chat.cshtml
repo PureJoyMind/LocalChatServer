@@ -1,0 +1,191 @@
+﻿@{
+  ViewData["Title"] = "Home Page";
+}
+@model Session
+
+<style>
+   body {
+       background-color: #2C2F33;
+       color: #ffffff;
+   }
+
+   .card {
+       background-color: #36393f;
+       border-color: #36393f;
+   }
+
+   .card-header {
+       background-color: #36393f;
+       border-bottom: none;
+   }
+
+   .card-body {
+       padding: 1rem;
+   }
+
+   .input-group {
+       margin-top: 1rem;
+   }
+
+   .input-group .form-control {
+       background-color: #40444b;
+       border-color: #40444b;
+       color: #ffffff;
+   }
+
+   .input-group .btn {
+       background-color: #7289da;
+       border-color: #7289da;
+       color: #ffffff;
+   }
+
+   .input-group .btn:hover {
+       background-color: #5a67d8;
+       border-color: #5a67d8;
+   }
+</style>
+
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+          <div class="card">
+                <div class="card-header h3 text-center">Maz Chat App</div>
+              <div class="card-header h4 text-center">
+                  Session owner: 
+              </div>
+              <div class="card-body">
+                <div id="chatContainer" style="height: 300px; overflow-y: auto;">
+                    <!-- Chat messages will appear here -->
+                </div>
+
+                <form id="messageForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="username" placeholder="Your Name">
+                        <input type="text" class="form-control" id="message" placeholder="Type a message...">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+                <div id="warning">
+
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+  connection.start().catch(function (error) {
+      return console.error(error.toString())
+  });
+
+  document.getElementById('messageForm').addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      var user = document.getElementById("username").value;
+      var message = document.getElementById("message").value;
+
+        var div = document.createElement('div');
+        document.getElementById("warning").innerHTML = "";
+
+    if(user && !message){
+            div.className = 'mb-3 mt-3 alert alert-warning text-center';
+        div.innerHTML = `You must enter a message!`;
+        document.getElementById("warning").appendChild(div);
+        return;
+    }else if(!user){
+            div.className = 'mb-3 mt-3 alert alert-warning text-center';
+        div.innerHTML = `You must enter a name!`;
+        document.getElementById("warning").appendChild(div);
+        return;
+    }
+      // Clear the message input field
+      document.getElementById("message").value = "";
+
+      connection.invoke("SendMessage", user, message).catch((err) => {
+          console.error(err.toString())
+      });
+  });
+
+  connection.on("RecieveMessage", function (user, message) {
+      var div = document.createElement('div');
+      div.className = 'mb-3';
+      div.innerHTML = `<strong>${user}</strong>: ${message}`;
+      document.getElementById("chatContainer").appendChild(div);     
+        // Scroll to the bottom of the chat
+        var container = document.getElementById("chatContainer");
+        container.scrollTop = container.scrollHeight;
+  });
+</script>
+
+
+@* 
+        
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+    #discussion {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    #sendm {
+        width: 100%;
+    }
+</style>
+
+<div class="container text-center">
+    <h1 class="display-4">Welcome</h1>
+    <form>
+        <div class="form-group">
+            <label for="username">Name</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <input type="text" class="form-control" id="message" placeholder="Type your message here">
+        </div>
+        <button type="submit" class="btn btn-primary" id="sendm">Send</button>
+    </form>
+    <hr>
+    <div>
+        <ul class="list-unstyled" id="discussion"></ul>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+    connection.start().catch(function (error) {
+        return console.error(error.toString())
+    });
+
+    $('#sendm').click(function (event) {
+        event.preventDefault();
+        var user = $('#username').val();
+        var message = $('#message').val();
+
+        connection.invoke("SendMessage", user, message).catch((err) => {
+            console.error(err.toString())
+        });
+    });
+
+    connection.on("RecieveMessage", function (user, message) {
+        var li = $('<li/>').text(user + ': ' + message);
+        $('#discussion').append(li);
+    });
+</script>
+ *@

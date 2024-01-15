@@ -3,18 +3,18 @@ using LocalChatServerWeb.Data;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace LocalChatServerWeb.Services
+namespace LocalChatServerWeb.Repositories
 {
     public class SessionRepository 
     {
         private readonly IMongoCollection<Session> sessionsCollection;
-        public SessionRepository(IOptions<MongoDbConfig> ChatDatabaseSettings)
+        public SessionRepository(IOptions<MongoDbConfig> mongoDbConfig)
         {
             var mongoClient = new MongoClient(
-                ChatDatabaseSettings.Value.ConnectionString);
+                mongoDbConfig.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(
-                ChatDatabaseSettings.Value.Name);
+                mongoDbConfig.Value.Name);
 
             sessionsCollection = mongoDatabase.GetCollection<Session>(
                 "Sessions");
@@ -25,6 +25,9 @@ namespace LocalChatServerWeb.Services
 
         public async Task<Session?> GetAsync(string id) =>
             await sessionsCollection.Find(x => x.Id == new Guid(id)).FirstOrDefaultAsync();
+
+        public async Task<Session?> GetByNameAsync(string name) =>
+            await sessionsCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
 
         public async Task CreateAsync(Session newBook) =>
             await sessionsCollection.InsertOneAsync(newBook);
