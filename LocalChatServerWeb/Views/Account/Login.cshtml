@@ -1,4 +1,4 @@
-﻿<h1 class="bg-info text-white">Login</h1>
+﻿<h1 class=" text-white">Login</h1>
 <div class="text-danger" asp-validation-summary="All"></div>
 
 <form method="post">
@@ -10,7 +10,7 @@
         <label>Password</label>
         <input name="password" class="form-control" />
     </div>
-    <button class="btn btn-primary" type="submit">Log In</button>
+    <button class="btn btn-primary mt-3 mb-3" type="submit">Log In</button>
     <p>Don't have and account?</p>
-    <a asp-controller="Operations" asp-action="Create" class="btn btn-danger">Register</a>
+    <a asp-controller="Operations" asp-action="Create" class="btn btn-info">Register</a>
 </form>

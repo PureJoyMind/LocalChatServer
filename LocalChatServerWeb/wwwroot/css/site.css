@@ -19,4 +19,13 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #2C2F33;
+  color: #ffffff;
 }
+
+.welcome-section {
+    display: flex;
+    align-items: center;
+}
+
+   
