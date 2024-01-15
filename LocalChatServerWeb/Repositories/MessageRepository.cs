@@ -26,6 +26,9 @@ namespace LocalChatServerWeb.Repositories
         public async Task<Message?> GetAsync(string id) =>
             await messagesCollection.Find(x => x.Id == new Guid(id)).FirstOrDefaultAsync();
 
+        public async Task<List<Message>> GetBySessionAsync(string id) =>
+            await messagesCollection.Find(x => x.SessionId == new Guid(id)).ToListAsync();
+
         public async Task CreateAsync(Message newBook) =>
             await messagesCollection.InsertOneAsync(newBook);
 

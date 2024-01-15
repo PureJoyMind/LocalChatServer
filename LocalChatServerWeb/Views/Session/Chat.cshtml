@@ -1,130 +1,166 @@
 ﻿@{
-  ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
-@model Session
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ChatViewModel
 
 <style>
-   body {
-       background-color: #2C2F33;
-       color: #ffffff;
-   }
+    body {
+        background-color: #2C2F33;
+        color: #ffffff;
+    }
 
-   .card {
-       background-color: #36393f;
-       border-color: #36393f;
-   }
+    .card {
+        background-color: #36393f;
+        border-color: #36393f;
+    }
 
-   .card-header {
-       background-color: #36393f;
-       border-bottom: none;
-   }
+    .card-header {
+        background-color: #36393f;
+        border-bottom: none;
+    }
 
-   .card-body {
-       padding: 1rem;
-   }
+    .card-body {
+        padding: 1rem;
+    }
 
-   .input-group {
-       margin-top: 1rem;
-   }
+    .input-group {
+        margin-top: 1rem;
+    }
 
-   .input-group .form-control {
-       background-color: #40444b;
-       border-color: #40444b;
-       color: #ffffff;
-   }
+        .input-group .form-control {
+            background-color: #40444b;
+            border-color: #40444b;
+            color: #ffffff;
+        }
 
-   .input-group .btn {
-       background-color: #7289da;
-       border-color: #7289da;
-       color: #ffffff;
-   }
+        .input-group .btn {
+            background-color: #7289da;
+            border-color: #7289da;
+            color: #ffffff;
+        }
 
-   .input-group .btn:hover {
-       background-color: #5a67d8;
-       border-color: #5a67d8;
-   }
+            .input-group .btn:hover {
+                background-color: #5a67d8;
+                border-color: #5a67d8;
+            }
 </style>
 
 <div class="container">
-  <div class="row justify-content-center">
-      <div class="col-md-8">
-          <div class="card">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header h3 text-center">Maz Chat App</div>
-              <div class="card-header h4 text-center">
-                  Session owner: 
-              </div>
-              <div class="card-body">
-                <div id="chatContainer" style="height: 300px; overflow-y: auto;">
-                    <!-- Chat messages will appear here -->
+                <div class="card-header h4 text-center">
+                    Session owner: @Model.UserName
                 </div>
-
-                <form id="messageForm">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="username" placeholder="Your Name">
-                        <input type="text" class="form-control" id="message" placeholder="Type a message...">
-                        <button type="submit" class="btn btn-primary">Send</button>
+                <div class="card-body">
+                    <div id="chatContainer" style="height: 300px; overflow-y: auto;">
+                        <!-- Chat messages will appear here -->
                     </div>
-                </form>
-                <div id="warning">
 
+                    <form id="messageForm">
+                        <div class="input-group">
+                            <span class="form-control" id="username">@User.Identity.Name</span>
+                            <input type="hidden" id="userId" name="userId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                            <input type="text" class="form-control" id="message" placeholder="Type a message...">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                    <div id="warning">
+                    </div>
                 </div>
-              </div>
-          </div>
-      </div>
-  </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-  var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
-  connection.start().catch(function (error) {
-      return console.error(error.toString())
-  });
+    connection.start().catch(function (error) {
+        return console.error(error.toString())
+    });
 
-  document.getElementById('messageForm').addEventListener("submit", function (event) {
-      event.preventDefault();
+    window.onload = function () {
+        var messages = @Html.Raw(Json.Serialize(Model.Messages));
+        if (messages && messages.length > 0) {
+            messages.forEach(function (message) {
+                console.log(message); // Add this line
+                var div = document.createElement('div');
+                div.className = 'mb-3';
+                div.innerHTML = `<strong>${message.senderName}</strong>: ${message.text}`;
+                document.getElementById("chatContainer").appendChild(div);
+            });
+            // Scroll to the bottom of the chat
+            var container = document.getElementById("chatContainer");
+            container.scrollTop = container.scrollHeight;
+        }
+    };
 
-      var user = document.getElementById("username").value;
-      var message = document.getElementById("message").value;
 
+
+    document.getElementById('messageForm').addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var user = document.getElementById("username").textContent;
+        var userId = document.getElementById("userId").value;
+        var message = document.getElementById("message").value;
         var div = document.createElement('div');
         document.getElementById("warning").innerHTML = "";
 
-    if(user && !message){
+        if (user && !message) {
             div.className = 'mb-3 mt-3 alert alert-warning text-center';
-        div.innerHTML = `You must enter a message!`;
-        document.getElementById("warning").appendChild(div);
-        return;
-    }else if(!user){
+            div.innerHTML = `You must enter a message!`;
+            document.getElementById("warning").appendChild(div);
+            return;
+        } else if (!user) {
             div.className = 'mb-3 mt-3 alert alert-warning text-center';
-        div.innerHTML = `You must enter a name!`;
-        document.getElementById("warning").appendChild(div);
-        return;
-    }
-      // Clear the message input field
-      document.getElementById("message").value = "";
+            div.innerHTML = `You must enter a name!`;
+            document.getElementById("warning").appendChild(div);
+            return;
+        }
+        
+        // Session Id
+        var sessionId = getQueryVariable("sessionId");
 
-      connection.invoke("SendMessage", user, message).catch((err) => {
-          console.error(err.toString())
-      });
-  });
+        // Clear the message input field
+        document.getElementById("message").value = "";
 
-  connection.on("RecieveMessage", function (user, message) {
-      var div = document.createElement('div');
-      div.className = 'mb-3';
-      div.innerHTML = `<strong>${user}</strong>: ${message}`;
-      document.getElementById("chatContainer").appendChild(div);     
+        connection.invoke("SendMessage", sessionId, user, userId, message).catch((err) => {
+            console.error(err.toString())
+        });
+    });
+
+    connection.on("RecieveMessage", function (user, userId, message) {
+        var div = document.createElement('div');
+        div.className = 'mb-3';
+        div.innerHTML = `<strong>${user}</strong>: ${message}`;
+        document.getElementById("chatContainer").appendChild(div);
         // Scroll to the bottom of the chat
         var container = document.getElementById("chatContainer");
         container.scrollTop = container.scrollHeight;
-  });
+    });
+    
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        alert('Query Variable ' + variable + ' not found');
+    }
 </script>
 
 
-@* 
-        
+@*
+
 @{
     ViewData["Title"] = "Home Page";
 }

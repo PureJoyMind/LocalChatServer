@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Session>
+
+<div class="container">
+    <div class="h3 text-center">Sessions for  user</div>
+    <ul>
+        @foreach (var session in @Model)
+        {
+            <li>
+                <div>@session.Name</div>
+                <div>@session.AddedAtUtc</div>
+                <a asp-controller="Session" asp-action="Chat" asp-route-sessionId="@session.Id.ToString()">Go to session</a>
+            </li>
+        }
+    </ul>
+</div>

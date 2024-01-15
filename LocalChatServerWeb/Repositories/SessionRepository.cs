@@ -23,6 +23,9 @@ namespace LocalChatServerWeb.Repositories
         public async Task<List<Session>> GetAsync() =>
             await sessionsCollection.Find(_ => true).ToListAsync();
 
+        public async Task<List<Session>> GetByUserAsync(string id) =>
+            await sessionsCollection.Find(x => x.Creator == new Guid(id)).ToListAsync();
+
         public async Task<Session?> GetAsync(string id) =>
             await sessionsCollection.Find(x => x.Id == new Guid(id)).FirstOrDefaultAsync();
 

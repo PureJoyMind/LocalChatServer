@@ -1,4 +1,5 @@
  using LocalChatServerWeb.Data;
+ using LocalChatServerWeb.Hubs;
  using LocalChatServerWeb.Models;
  using LocalChatServerWeb.Repositories;
 
@@ -17,6 +18,8 @@ builder.Services.AddSingleton<MessageRepository>();
 
 builder.Services.AddControllersWithViews();
 
+ builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,8 +37,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints => endpoints.MapHub<ChatHub>("/chat"));
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Session}/{action=GetSessions}/{id?}");
 
 app.Run();
