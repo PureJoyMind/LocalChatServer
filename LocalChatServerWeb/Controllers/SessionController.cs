@@ -73,7 +73,6 @@ namespace LocalChatServerWeb.Controllers
             return RedirectToAction("Chat", new {sessionId});
         }
         [HttpGet]
-        //[Route("/chat/{sessionId}")]
         public async Task<IActionResult> Chat(string sessionId)
         {
             var session = await sessionRepository.GetAsync(sessionId);
@@ -89,7 +88,7 @@ namespace LocalChatServerWeb.Controllers
 
             var messages = await messageRepository.GetBySessionAsync(sessionId);
 
-            viewModel.Messages = messages;
+            viewModel.Messages = messages.OrderBy(m => m.AddedAtUtc).ToList(); ;
 
             return View(viewModel);
         }
