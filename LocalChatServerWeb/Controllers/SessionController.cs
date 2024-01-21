@@ -72,6 +72,7 @@ namespace LocalChatServerWeb.Controllers
 
             return RedirectToAction("Chat", new {sessionId});
         }
+
         [HttpGet]
         public async Task<IActionResult> Chat(string sessionId)
         {
@@ -83,8 +84,8 @@ namespace LocalChatServerWeb.Controllers
                 Session = session,
             };
             var user = await userManager.FindByIdAsync(session.Creator.ToString());
-            viewModel.UserId = user.Id.ToString();
-            viewModel.UserName = user.UserName!;
+            viewModel.UserId_SessionOwner = user.Id.ToString();
+            viewModel.UserName_SessionOwner = user.UserName!;
 
             var messages = await messageRepository.GetBySessionAsync(sessionId);
 
@@ -92,7 +93,6 @@ namespace LocalChatServerWeb.Controllers
 
             return View(viewModel);
         }
-
 
     }
 }

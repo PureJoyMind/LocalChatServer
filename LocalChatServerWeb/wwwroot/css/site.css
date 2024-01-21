@@ -28,4 +28,38 @@ body {
     align-items: center;
 }
 
+.card {
+    background-color: #36393f;
+    border-color: #36393f;
+}
+
+.card-header {
+    background-color: #36393f;
+    /* border-bottom: none; */
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.input-group {
+    margin-top: 1rem;
+}
+
+    .input-group .form-control {
+        background-color: #40444b;
+        border-color: #40444b;
+        color: #ffffff;
+    }
+
+    .input-group .btn {
+        background-color: #7289da;
+        border-color: #7289da;
+        color: #ffffff;
+    }
+
+        .input-group .btn:hover {
+            background-color: #5a67d8;
+            border-color: #5a67d8;
+        }
    
