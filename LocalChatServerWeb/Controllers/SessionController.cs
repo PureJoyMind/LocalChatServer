@@ -21,7 +21,7 @@ namespace LocalChatServerWeb.Controllers
             this.messageRepository = messageRepository;
         }
 
-        public async Task<ViewResult> GetSessionsForCurrentUser()
+        public async Task<IActionResult> GetSessionsForCurrentUser()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var sessions = await sessionRepository.GetByUserAsync(userId);
@@ -29,7 +29,7 @@ namespace LocalChatServerWeb.Controllers
         }
 
 
-        public async Task<ViewResult> GetSessionsForUser(string userId)
+        public async Task<IActionResult> GetSessionsForUser(string userId)
         {
             var guid = new Guid();
             if (!Guid.TryParse(userId, out guid))
