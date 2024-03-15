@@ -24,7 +24,7 @@ namespace LocalChatServerWeb.Controllers
         public async Task<IActionResult> GetSessionsForCurrentUser()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var sessions = await sessionRepository.GetByUserAsync(userId);
+            var sessions = await sessionRepository.GetByUserAsync(userId!);
             return View("GetSessions", sessions.AsEnumerable());
         }
 
@@ -91,7 +91,7 @@ namespace LocalChatServerWeb.Controllers
 
             viewModel.Messages = messages.OrderBy(m => m.AddedAtUtc).ToList(); ;
 
-            return View(viewModel);
+            return View("ChatNew",viewModel);
         }
 
     }

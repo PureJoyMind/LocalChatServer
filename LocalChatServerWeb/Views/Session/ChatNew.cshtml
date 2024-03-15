@@ -1,0 +1,342 @@
+﻿@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.JSInterop
+@using MongoDB.Bson.Serialization.Serializers
+@model ChatViewModel
+@inject IJSRuntime JSRuntime
+@{
+	string FormatDateTime(DateTime date)
+	{
+		DateTime now = DateTime.Now;
+		bool isToday = date.Date == now.Date;
+		int hours = date.Hour;
+		int minutes = date.Minute;
+		string ampm = hours >= 12 ? "PM" : "AM";
+		int formattedHours = hours % 12 == 0 ? 12 : hours % 12; // Convert to 12-hour format
+		string formattedMinutes = minutes < 10 ? "0" + minutes : minutes.ToString();
+		string[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+		string formattedDate = isToday ? "Today" : $"{date.Day} {monthNames[date.Month - 1]}";
+
+		return $"{formattedHours}:{formattedMinutes} {ampm}, {formattedDate}";
+	}
+}
+<script>
+	$(document).ready(function () {
+		$('#action_menu_btn').click(function () {
+			$('.action_menu').toggle();
+		});
+	});
+</script>
+
+<div class="container-fluid h-100">
+	<div class="row justify-content-center h-100">
+		<div class="col-md-4 col-xl-3 chat">
+			<div class="card mb-sm-3 mb-md-0 contacts_card">
+				<div class="card-header">
+					<div class="input-group">
+						<input type="text" placeholder="Search..." name="" class="form-control search">
+						<div class="input-group-prepend">
+							<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+						</div>
+					</div>
+				</div>
+				<div class="card-body contacts_body">
+					<ui class="contacts">
+						<li class="active">
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">
+									<span class="online_icon"></span>
+								</div>
+								<div class="user_info">
+									<span>Khalid Charif</span>
+									<p>Online</p>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://2.bp.blogspot.com/-8ytYF7cfPkQ/WkPe1-rtrcI/AAAAAAAAGqU/FGfTDVgkcIwmOTtjLka51vineFBExJuSACLcBGAs/s320/31.jpg" class="rounded-circle user_img">
+									<span class="online_icon offline"></span>
+								</div>
+								<div class="user_info">
+									<span>Chaymae Naim</span>
+									<p>Left 7 mins ago</p>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://i.pinimg.com/originals/ac/b9/90/acb990190ca1ddbb9b20db303375bb58.jpg" class="rounded-circle user_img">
+									<span class="online_icon"></span>
+								</div>
+								<div class="user_info">
+									<span>Sami Rafi</span>
+									<p>Online</p>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://avatars.hsoubcdn.com/ed57f9e6329993084a436b89498b6088?s=256" class="rounded-circle user_img">
+									<span class="online_icon offline"></span>
+								</div>
+								<div class="user_info">
+									<span>Hassan Agmir</span>
+									<p>Left 30 mins ago</p>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://static.turbosquid.com/Preview/001214/650/2V/boy-cartoon-3D-model_D.jpg" class="rounded-circle user_img">
+									<span class="online_icon offline"></span>
+								</div>
+								<div class="user_info">
+									<span>Abdou Chatabi</span>
+									<p>Left 50 mins ago</p>
+								</div>
+							</div>
+						</li>
+					</ui>
+				</div>
+				<div class="card-footer"></div>
+			</div>
+		</div>
+		<div class="col-md-8 col-xl-6 chat">
+			<div class="card">
+				<div class="card-header msg_head">
+					<div class="d-flex bd-highlight">
+						@* <div class="img_cont"> *@
+						@* 	<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img"> *@
+						@* 	<span class="online_icon"></span> *@
+						@* </div> *@
+						<div class="user_info text-center">
+							<span>@Model.UserName_SessionOwner</span>
+							<p>Session owner</p>
+						</div>
+						@* <div class="video_cam"> *@
+						@* 	<span><i class="fas fa-video"></i></span> *@
+						@* 	<span><i class="fas fa-phone"></i></span> *@
+						@* </div> *@
+					</div>
+					@* <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span> *@
+					@* <div class="action_menu"> *@
+					@* 	<ul> *@
+					@* 		<li><i class="fas fa-user-circle"></i> View profile</li> *@
+					@* 		<li><i class="fas fa-users"></i> Add to close friends</li> *@
+					@* 		<li><i class="fas fa-plus"></i> Add to group</li> *@
+					@* 		<li><i class="fas fa-ban"></i> Block</li> *@
+					@* 	</ul> *@
+					@* </div> *@
+				</div>
+				<div class="card-body msg_card_body" id="chatContainer">
+					@* <div class="d-flex justify-content-start mb-4"> *@
+					@* 	<div class="img_cont_msg"> *@
+					@* 		<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg"> *@
+					@* 	</div> *@
+					@* 	<div class="msg_cotainer"> *@
+					@* 		Hi, how are you samim? *@
+					@* 		<span class="msg_time">8:40 AM, Today</span> *@
+					@* 	</div> *@
+					@* </div> *@
+					@* <div class="d-flex justify-content-end mb-4"> *@
+					@* 	<div class="msg_cotainer_send"> *@
+					@* 		Hi Khalid i am good tnx how about you? *@
+					@* 		<span class="msg_time_send">8:55 AM, Today</span> *@
+					@* 	</div> *@
+					@* 	<div class="img_cont_msg"> *@
+					@* 		<img src="https://avatars.hsoubcdn.com/ed57f9e6329993084a436b89498b6088?s=256" class="rounded-circle user_img_msg"> *@
+					@* 	</div> *@
+					@* </div> *@
+
+					@foreach (var message in Model.Messages)
+					{
+						var side = @User.Identity.Name == message.SenderName ? "end" : "start";
+						var t = side == "end" ? "_send" : "";
+						
+						<div class="d-flex @("justify-content-" + side) mb-4">
+							<div class="@("msg_cotainer" + t)">
+								@message.Text
+								<span class="@("msg_time" + t)">@FormatDateTime(message.AddedAtUtc.ToLocalTime())</span>
+							</div>
+							@* <div class="img_cont_msg"> *@
+							@* 	<img src="" class="rounded-circle user_img_msg"> *@
+							@* </div> *@
+						</div>
+					}
+				</div>
+				<div class="card-footer" id="messageForm">
+					<form>
+						<div class="input-group">
+							<div class="input-group-append">
+								@* <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span> *@
+								<span class="form-control" id="username">@User.Identity.Name</span>
+							</div>
+							@* <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea> *@
+							<input hidden  id="userId" name="userId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+							<input class="form-control type_msg" id="message" placeholder="Type a message...">
+							
+							<div class="input-group-append">
+								<span class="input-group-text send_btn">
+									@* <i class="fas fa-location-arrow"></i> *@
+									<button type="submit" class="fas fa-location-arrow"></button>
+								</span>
+							</div>
+						</div>
+					</form>
+					<div id="warning"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- JQuery -->
+@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> *@
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+<script type="text/javascript">
+    var currentUser = '@User.Identity.Name';
+</script>
+<script>
+	console.log("Chat Scripts initiated.");
+
+	var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+	connection.start().catch(function (error) {
+		return console.error(error.toString())
+	});
+
+	//window.onload = function () {
+	//    var messages = @Html.Raw(Json.Serialize(Model.Messages));
+	//    if (messages && messages.length > 0) {
+	//        messages.forEach(function (message) {
+	//            console.log(message); // Add this line
+	//            var div = document.createElement('div');
+	//            div.className = 'mb-3';
+	//            div.innerHTML = `<strong>${message.senderName}</strong>: ${message.text}`;
+	//            document.getElementById("chatContainer").appendChild(div);
+	//        });
+	//        // Scroll to the bottom of the chat
+	//        var container = document.getElementById("chatContainer");
+	//        container.scrollTop = container.scrollHeight;
+	//    }
+	//};
+
+
+
+	document.getElementById('messageForm').addEventListener("submit", function (event) {
+		event.preventDefault();
+		// debugger;
+		var user = document.getElementById("username").textContent;
+		var userId = document.getElementById("userId").value;
+		var message = document.getElementById("message").value;
+		var div = document.createElement('div');
+		document.getElementById("warning").innerHTML = "";
+
+		if (user && !message) {
+			div.className = 'mb-3 mt-3 alert alert-warning text-center';
+			div.innerHTML = `You must enter a message!`;
+			document.getElementById("warning").appendChild(div);
+			return;
+		} else if (!user) {
+			div.className = 'mb-3 mt-3 alert alert-warning text-center';
+			div.innerHTML = `You must enter a name!`;
+			document.getElementById("warning").appendChild(div);
+			return;
+		}
+
+		// Session Id
+		var sessionId = getQueryVariable("sessionId");
+
+		// Clear the message input field
+		document.getElementById("message").value = "";
+
+		connection.invoke("SendMessage", sessionId, user, userId, message).catch((err) => {
+			console.error(err.toString())
+		});
+	});
+
+	connection.on("RecieveMessage", function (message) {
+		debugger;
+		console.log(message);
+		// var div = document.createElement('div');
+		// div.className = 'mb-3';
+		// div.innerHTML = `<strong>${message.senderName}</strong>: ${message.text}`;
+		// document.getElementById("chatContainer").appendChild(div);
+		// // Scroll to the bottom of the chat
+		// var container = document.getElementById("chatContainer");
+		// container.scrollTop = container.scrollHeight;
+		
+		// Create the outer div
+	
+       var side = currentUser == message.senderName ? "end" : "start";
+       var t = side == "end" ? "_send" : "";
+       						
+       var html = `<div class="d-flex ${"justify-content-" + side} mb-4">`;
+       html +=	`<div class="${"msg_cotainer" + t}">`;
+       html += message.text;
+       var tmp = `msg_time${t}`;
+       html += `<span class="${tmp}">`
+       html += formatDateTime(message.addedAtUtc)
+	   html += "</span>";
+       html +="</div>";
+       @* <div class="img_cont_msg"> *@
+       @* 	<img src="" class="rounded-circle user_img_msg"> *@
+       @* </div> *@
+       html += "</div>";
+       						
+       
+        var outerDiv = document.createElement("div");
+		outerDiv.innerHTML = html;
+        // Append the outer div to the chat container
+        var chatContainer = document.getElementById("chatContainer");
+        chatContainer.appendChild(outerDiv);
+        
+        // Scroll to the bottom of the chat
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+	});
+
+	function getQueryVariable(variable) {
+		var query = window.location.search.substring(1);
+		var vars = query.split("&");
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if (pair[0] == variable) {
+				return pair[1];
+			}
+		}
+		alert('Query Variable ' + variable + ' not found');
+	}
+	
+	function formatDateTime(dateString) {
+		date = new Date(dateString);
+        const now = new Date();
+        const isToday = date.getDate() === now.getDate() &&
+                        date.getMonth() === now.getMonth() &&
+                        date.getFullYear() === now.getFullYear();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const formattedDate = isToday ? 'Today' : `${date.getDate()} ${monthNames[date.getMonth()]}`;
+    
+        return `${formattedHours}:${formattedMinutes} ${ampm}, ${formattedDate}`;
+    }
+</script>
+

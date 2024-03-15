@@ -22,7 +22,7 @@ namespace LocalChatServerWeb.Hubs
                 Text = message
             };
             await messageRepository.CreateAsync(messageDb);
-            await Clients.All.SendAsync("RecieveMessage", user, userId, message);
+            await Clients.All.SendAsync("RecieveMessage", messageDb);
         }
     }
 }

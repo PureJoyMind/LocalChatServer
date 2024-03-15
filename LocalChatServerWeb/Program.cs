@@ -41,6 +41,6 @@ app.UseEndpoints(endpoints => endpoints.MapHub<ChatHub>("/chat"));
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Session}/{action=GetSessions}/{id?}");
+    pattern: "{controller=Session}/{action=GetSessionsForCurrentUser}/{id?}");
 
 app.Run();
