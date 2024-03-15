@@ -23,3 +23,7 @@ Using end-to-end encryption is generally a good practice for securing communicat
 ## Application Workflow
 on first register the user data is stored in an in-memory mongoDb instance. each user also has their public key in their document. 
 if a message in db, has a deprecated user, keep the user name.
+
+## To Do
+* Add online check functionality
+* Add user list to side bar for online users
